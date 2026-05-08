@@ -1,0 +1,11 @@
+{
+  "users_table": "users",
+  "user_id_column": "id",
+  "user_name_column": "name",
+
+  "attendance_table": "attendance",
+  "attendance_user_id": "user_id",
+  "check_in_column": "check_in",
+  "date_column": "date",
+  "check_out_column":  "check_out"
+}
