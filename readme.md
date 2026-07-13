@@ -2,9 +2,9 @@
 
 MCP-based attendance management server with PostgreSQL integration and schema mapping support.
 
-Repository: \[MCP-server-for-attendance-maintainance]
+Repository: [MCP-server-for-attendance-maintainance]
 
-\---
+---
 
 # Features
 
@@ -19,7 +19,7 @@ Repository: \[MCP-server-for-attendance-maintainance]
 > Currently only PostgreSQL is supported.
 > Support for other SQL-based databases will be added in future updates.
 
-\---
+---
 
 # Prerequisites
 
@@ -29,7 +29,7 @@ Before starting, make sure you have:
 * PostgreSQL installed with an already created database and required attendance-related tables
 * Claude Desktop (optional, for MCP client integration)
 
-\---
+---
 
 # Clone the Repository
 
@@ -39,7 +39,7 @@ git clone https://github.com/vaisu23/MCP-server-for-attendance-maintainance.git
 cd MCP-server-for-attendance-maintainance
 ```
 
-\---
+---
 
 # Create a Virtual Environment
 
@@ -52,10 +52,10 @@ python -m venv venv
 Activate:
 
 ```bash
-venv\\Scripts\\activate
+venv\Scripts\activate
 ```
 
-\---
+---
 
 # Install Requirements
 
@@ -65,7 +65,7 @@ Install all required dependencies inside the virtual environment:
 pip install -r requirements.txt
 ```
 
-\---
+---
 
 # Configure PostgreSQL Database
 
@@ -74,22 +74,22 @@ Create a `.env` file in the project root.
 Example:
 
 ```env
-DB\_NAME="your\_database\_name"
-DB\_USER="your\_database\_user"
-DB\_PASSWORD="your\_password"
-DB\_HOST=localhost
-DB\_PORT=5432
+DB_NAME="your_database_name"
+DB_USER="your_database_user"
+DB_PASSWORD="your_password"
+DB_HOST=localhost
+DB_PORT=5432
 ```
 
 Replace:
 
 ```env
-DB\_PASSWORD="your\_password"
+DB_PASSWORD="your_password"
 ```
 
 with your actual PostgreSQL password.
 
-\---
+---
 
 # Important: Configure `mapping.json`
 
@@ -105,15 +105,15 @@ Default example:
 
 ```json
 {
-  "users\_table": "users",
-  "user\_id\_column": "id",
-  "user\_name\_column": "name",
+  "users_table": "users",
+  "user_id_column": "id",
+  "user_name_column": "name",
 
-  "attendance\_table": "attendance",
-  "attendance\_user\_id": "user\_id",
-  "check\_in\_column": "check\_in",
-  "date\_column": "date",
-  "check\_out\_column": "check\_out"
+  "attendance_table": "attendance",
+  "attendance_user_id": "user_id",
+  "check_in_column": "check_in",
+  "date_column": "date",
+  "check_out_column": "check_out"
 }
 ```
 
@@ -133,11 +133,11 @@ Example:
 If your database uses:
 
 * `employees` instead of `users`
-* `emp\_id` instead of `id`
+* `emp_id` instead of `id`
 
 then update the mapping accordingly.
 
-\---
+---
 
 # Run the MCP Server
 
@@ -149,33 +149,16 @@ python -m app.main
 
 If everything is configured correctly, the MCP server should start successfully.
 
-\---
+---
 
 # Connecting with Claude Desktop
 
-To connect this MCP server to your Claude Desktop App, you need to add it to your `claude\_desktop\_config.json` file.
+Locate your Claude Desktop configuration file.
 
-### Option 1: Using Claude Desktop (Recommended \& Easiest)
+Typical Windows location:
 
-The simplest way to open the configuration file—regardless of how Claude was installed—is to let the app open it for you:
-
-1. Open the **Claude Desktop App**.
-2. Click on **Claude** in the file menu (or the **Developer** menu depending on your version).
-3. Select **Settings...** or **Edit Config**.
-4. This will instantly open your active `claude\_desktop\_config.json` file in your default text editor.
-
-\---
-
-### Option 2: Locating the File Manually (Windows)
-
-If you prefer to find the file manually or are using a script, its location depends on how you installed Claude:
-
-#### Case A: If installed via the Windows Store / App Installer (New Default)
-
-Copy and paste this universal variable path directly into your Windows File Explorer address bar or your code editor to jump straight to it:
-
-```powershell
-%LOCALAPPDATA%\\Packages\\Claude\_pzs8sxrjxfjjc\\LocalCache\\Roaming\\Claude\\claude\_desktop\_config.json
+```text
+%APPDATA%\Claude\claude_desktop_config.json
 ```
 
 Add the following configuration:
@@ -184,20 +167,20 @@ Add the following configuration:
 {
   "mcpServers": {
     "attendance-server": {
-      "command": "PATH\_TO\_YOUR\_VENV\_PYTHON",
-      "args": \[
+      "command": "PATH_TO_YOUR_VENV_PYTHON",
+      "args": [
         "-m",
         "app.main"
       ],
       "env": {
-        "PYTHONPATH": "PATH\_TO\_YOUR\_PROJECT\_ROOT"
+        "PYTHONPATH": "PATH_TO_YOUR_PROJECT_ROOT"
       }
     }
   }
 }
 ```
 
-\---
+---
 
 # Replace the Following Paths
 
@@ -206,7 +189,7 @@ Add the following configuration:
 Replace:
 
 ```text
-PATH\_TO\_YOUR\_VENV\_PYTHON
+PATH_TO_YOUR_VENV_PYTHON
 ```
 
 with your virtual environment Python executable.
@@ -214,17 +197,17 @@ with your virtual environment Python executable.
 Example structure:
 
 ```text
-YOUR\_PROJECT\_FOLDER/venv/Scripts/python.exe
+YOUR_PROJECT_FOLDER/venv/Scripts/python.exe
 ```
 
-\---
+---
 
 ## Project root path
 
 Replace:
 
 ```text
-PATH\_TO\_YOUR\_PROJECT\_ROOT
+PATH_TO_YOUR_PROJECT_ROOT
 ```
 
 with the root path of the cloned repository.
@@ -235,7 +218,7 @@ Example structure:
 C:/Users/YourName/path/to/MCP-server-for-attendance-maintainance
 ```
 
-\---
+---
 
 # Restart Claude Desktop
 
@@ -246,19 +229,19 @@ After updating the config:
 
 The MCP tools should now become available automatically.
 
-\---
+---
 
 # Available MCP Tools
 
 Current tools include:
 
-* create\_user\_tool
-* get\_user\_tool
-* mark\_attendance\_tool
-* get\_attendance\_tool
-* check\_out\_tool
+* create_user_tool
+* get_user_tool
+* mark_attendance_tool
+* get_attendance_tool
+* check_out_tool
 
-\---
+---
 
 # Notes
 
@@ -272,7 +255,7 @@ Current tools include:
   * Auto schema mapping
   * Additional attendance analytics
 
-\---
+---
 
 # Troubleshooting
 
@@ -288,7 +271,7 @@ python -m app.main
 
 * `PYTHONPATH` is correctly configured in Claude Desktop config
 
-\---
+---
 
 ## Database connection errors
 
@@ -298,5 +281,5 @@ Verify:
 * `.env` credentials are correct
 * database exists
 
-\---
+---
 
