@@ -153,13 +153,27 @@ If everything is configured correctly, the MCP server should start successfully.
 
 # Connecting with Claude Desktop
 
-Locate your Claude Desktop configuration file.
 
-Typical Windows location:
 
-```text
-%APPDATA%\Claude\claude_desktop_config.json
-```
+To connect this MCP server to your Claude Desktop App, you need to add it to your `claude_desktop_config.json` file. 
+
+### Option 1: Using Claude Desktop (Recommended & Easiest)
+The simplest way to open the configuration file—regardless of how Claude was installed—is to let the app open it for you:
+
+1. Open the **Claude Desktop App**.
+2. Click on **Claude** in the file menu (or the **Developer** menu depending on your version).
+3. Select **Settings...** or **Edit Config**.
+4. This will instantly open your active `claude_desktop_config.json` file in your default text editor.
+
+---
+
+### Option 2: Locating the File Manually (Windows)
+If you prefer to find the file manually or are using a script, its location depends on how you installed Claude:
+
+#### Case A: If installed via the Windows Store / App Installer (New Default)
+Copy and paste this universal variable path directly into your Windows File Explorer address bar or your code editor to jump straight to it:
+```powershell
+%LOCALAPPDATA%\Packages\Claude_pzs8sxrjxfjjc\LocalCache\Roaming\Claude\claude_desktop_config.json
 
 Add the following configuration:
 
