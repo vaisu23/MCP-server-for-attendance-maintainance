@@ -1,5 +1,6 @@
 from mcp.server.fastmcp import FastMCP
-
+from  app.db.initializer import initialize_database
+from app.core.validator import valid_schema
 from app.tools.attendance import (
     mark_attendance,
     get_attendance,
@@ -8,16 +9,23 @@ from app.tools.attendance import (
 
 from app.tools.users import (
     create_user,
-    get_user
+    get_user,
+    update_user
 )
 
 from app.core.validator import valid_schema
+from app.db.connection import get_connection
 
 mcp = FastMCP("attendance_server")
 
-valid_schema()
+#valid_schema()
 
-
+@mcp.tool()
+def get_connection_tool():
+    """
+    use this to get to the detials about the db connections
+    """
+    return get_connection()
 @mcp.tool()
 def mark_attendance_tool(user_id: int):
     """
@@ -72,6 +80,42 @@ def get_user_tool(user_name: str):
     """
     return get_user(user_name)
 
+@mcp.tool()
+def date_attendance_tool(user_id: int, date_str: str):
+    """
+    Fetch attendance for a user on a specific date.
+
+    Args:
+        user_id: Unique employee ID
+        date_str: Date in YYYY-MM-DD format
+    """
+    from app.tools.attendance import date_attendance
+    return date_attendance(user_id, date_str)
+@mcp.tool()
+def update_user_tool(
+    user_id: int,
+    phone: str = None,
+    age: int = None,
+    dob: str = None,
+    department: str = None,
+):
+    """
+    Update one or more details for an existing user.
+
+    Use this tool when the user wants to modify their profile
+    information, such as their phone number, age, date of birth,
+    or department. Only the fields provided will be updated.
+
+    Args:
+        user_id: Unique employee ID.
+        phone: New phone number (optional).
+        age: New age (optional).
+        dob: New date of birth in YYYY-MM-DD format (optional).
+        department: New department name (optional).
+    """
+    return update_user(user_id, phone, age, dob, department)
 
 if __name__ == "__main__":
+    initialize_database()
+    valid_schema()
     mcp.run(transport="stdio")

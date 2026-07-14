@@ -8,8 +8,9 @@ env_path= Path(__file__).resolve().parent.parent.parent / '.env'
 
 load_dotenv(dotenv_path=  env_path)
 
-
 def get_connection():
+    print(f"[DB] Connecting to: {os.getenv('DB_NAME')}")
+
     return psycopg2.connect(
         dbname=os.getenv("DB_NAME"),
         user=os.getenv("DB_USER"),

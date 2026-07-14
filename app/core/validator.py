@@ -14,7 +14,7 @@ def valid_schema():
     db_columns = {col[0]: col for col in columns}
 
     required_fields = [
-        mapping["user_id_column"],
+        mapping["attendance_user_id"],
         mapping["check_in_column"],
         mapping["date_column"]
     ]

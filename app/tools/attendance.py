@@ -57,3 +57,16 @@ def check_out(user_id: int):
         return {"status": "already_checked_out"}
 
     return {"status": "checked_out"}
+
+
+
+def date_attendance(user_id: int, date ):
+    mapping = get_mapping()
+    query = f"""
+    SELECT {mapping['check_in_column']}, {mapping['check_out_column']} FROM {mapping['attendance_table']}
+    WHERE {mapping['attendance_user_id']} = %s
+    AND {mapping['date_column']} = %s
+    """
+    return execute(query, (user_id, date), fetch=True)
+
+
