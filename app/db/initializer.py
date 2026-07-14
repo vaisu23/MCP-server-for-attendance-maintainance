@@ -9,9 +9,10 @@ from app.db.connection import get_connection
 
 
 # Load .env
-env_path = Path(__file__).resolve().parent.parent.parent / ".env"
-load_dotenv(dotenv_path=env_path)
-
+root= Path(__file__).resolve().parent.parent.parent 
+pp= os.getenv("ENV_FILE",".env")
+env_path= root / pp
+load_dotenv(dotenv_path=  env_path)
 
 def initialize_database():
     db_name = os.getenv("DB_NAME")
@@ -75,7 +76,7 @@ def initialize_database():
             Path(__file__).resolve().parent.parent / "schema.sql"
         )
 
-        with open(schema_path, "r", encoding="utf-16") as f:
+        with open(schema_path, "r", encoding="utf-8") as f:
             cursor.execute(f.read())
 
         conn.commit()
