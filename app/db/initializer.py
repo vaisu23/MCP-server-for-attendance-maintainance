@@ -9,17 +9,16 @@ from app.db.connection import get_connection
 
 
 # Load .env
-root= Path(__file__).resolve().parent.parent.parent 
-pp= os.getenv("ENV_FILE",".env")
-env_path= root / pp
-load_dotenv(dotenv_path=  env_path)
+env_path = Path(__file__).resolve().parent.parent.parent / ".env"
+load_dotenv(dotenv_path=env_path)
+
 
 def initialize_database():
     db_name = os.getenv("DB_NAME")
-
+    DEFAULT_DB = "postgres"
     # Connect to the default postgres database
     conn = psycopg2.connect(
-        dbname=db_name,
+        dbname=DEFAULT_DB,
         user=os.getenv("DB_USER"),
         password=os.getenv("DB_PASSWORD"),
         host=os.getenv("DB_HOST"),

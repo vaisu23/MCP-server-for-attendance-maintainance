@@ -1,5 +1,6 @@
 from .mapping_loader import get_mapping
 from app.db.executor import execute 
+from .log import log 
 
 def valid_schema():
     mapping = get_mapping()
@@ -28,6 +29,6 @@ def valid_schema():
                 raise Exception(
                     f"Column '{col_name}' is required but not mapped or has no default"
                 )
-    print("Schema validation passed.")
+    log("Schema validation passed.")
 
 

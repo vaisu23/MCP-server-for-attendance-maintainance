@@ -116,16 +116,17 @@ def update_user_tool(
     return update_user(user_id, phone, age, dob, department)
 
 import os
+from app.core.log import log
 
 if __name__ == "__main__":
 
     run_db_init = os.getenv("RUN_DB_INIT", "true").lower() == "true"
 
     if run_db_init:
-        print("Running database initialization...")
+        log("Running database initialization...")
         initialize_database()
     else:
-        print("Skipping database initialization (Docker mode).")
+        log("Skipping database initialization (Docker mode).")
 
     valid_schema()
     mcp.run(transport="stdio")

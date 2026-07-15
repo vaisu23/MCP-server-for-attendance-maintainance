@@ -1,37 +1,72 @@
-# MCP Server for Attendance Maintenance
+# MCP Server for Attendance Management
 
-MCP-based attendance management server with PostgreSQL integration and schema mapping support.
+An MCP (Model Context Protocol) server for employee attendance management with PostgreSQL support. The server provides tools to manage employees, mark attendance, check-out employees, and retrieve attendance records.
 
-Repository: [MCP-server-for-attendance-maintainance]
+The project supports **two ways of running**:
+
+* **Docker (Recommended)** – No Python or PostgreSQL installation required.
+* **Local Installation** – Use your own PostgreSQL instance.
+
+Repository:
+
+```text
+https://github.com/vaisu23/MCP-server-for-attendance-maintainance
+```
 
 ---
 
 # Features
 
-* MCP server integration
-* PostgreSQL database support
-* Flexible schema mapping
-* Attendance check-in/check-out tools
-* User management tools
-* Schema validation
-* Claude Desktop MCP support
+* MCP Server using FastMCP
+* PostgreSQL backend
+* Automatic schema validation
+* Automatic database initialization (Local installation)
+* Automatic schema creation (Docker)
+* Configurable schema mapping
+* Employee management
+* Attendance check-in/check-out
+* Claude Desktop integration
 
-> Currently only PostgreSQL is supported.
-> Support for other SQL-based databases will be added in future updates.
-
----
-
-# Prerequisites
-
-Before starting, make sure you have:
-
-* Python installed
-* PostgreSQL installed with an already created database and required attendance-related tables
-* Claude Desktop (optional, for MCP client integration)
+Currently only PostgreSQL is supported.
 
 ---
 
-# Clone the Repository
+# Project Structure
+
+```text
+MCP-server-for-attendance-maintainance/
+
+├── app/
+│   ├── config/
+│   ├── core/
+│   ├── db/
+│   ├── tools/
+│   ├── main.py
+│   └── schema.sql
+│
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+├── .env.docker
+└── README.md
+```
+
+---
+
+# Option 1 (Recommended): Docker
+
+## Prerequisites
+
+* Docker Desktop installed
+* Claude Desktop (Optional)
+
+No Python installation is required.
+
+No PostgreSQL installation is required.
+
+---
+
+## Clone the Repository
 
 ```bash
 git clone https://github.com/vaisu23/MCP-server-for-attendance-maintainance.git
@@ -41,15 +76,102 @@ cd MCP-server-for-attendance-maintainance
 
 ---
 
-# Create a Virtual Environment
+## Build the Containers
 
-## Windows (PowerShell)
+```bash
+docker compose build
+```
+
+---
+
+## Start the Services
+
+```bash
+docker compose up
+```
+
+or
+
+```bash
+docker compose up --build
+```
+
+`--build` rebuilds the Python image before starting the containers.
+
+---
+
+## What Docker Creates
+
+Docker automatically starts:
+
+* PostgreSQL
+* MCP Server
+
+The PostgreSQL container automatically:
+
+* Creates the database
+* Executes `app/schema.sql`
+* Creates all tables
+* Creates constraints
+* Creates sequences
+
+No manual database setup is required.
+
+---
+
+## Stop the Services
+
+```bash
+docker compose down
+```
+
+This stops the containers while preserving the database.
+
+---
+
+## Delete Everything (Including Database)
+
+```bash
+docker compose down -v
+```
+
+This removes:
+
+* Containers
+* Database volume
+
+The next `docker compose up` starts with a completely fresh database.
+
+---
+
+# Option 2: Local Installation
+
+## Prerequisites
+
+* Python 3.11+
+* PostgreSQL installed and running
+
+---
+
+## Clone the Repository
+
+```bash
+git clone https://github.com/vaisu23/MCP-server-for-attendance-maintainance.git
+
+cd MCP-server-for-attendance-maintainance
+```
+
+---
+
+## Create Virtual Environment
+
+Windows PowerShell
 
 ```bash
 python -m venv venv
 ```
 
-Activate:
+Activate
 
 ```bash
 venv\Scripts\activate
@@ -57,9 +179,7 @@ venv\Scripts\activate
 
 ---
 
-# Install Requirements
-
-Install all required dependencies inside the virtual environment:
+## Install Requirements
 
 ```bash
 pip install -r requirements.txt
@@ -67,41 +187,43 @@ pip install -r requirements.txt
 
 ---
 
-# Configure PostgreSQL Database
+## Create a `.env`
 
 Create a `.env` file in the project root.
 
-Example:
+Example
 
 ```env
-DB_NAME="your_database_name"
-DB_USER="your_database_user"
-DB_PASSWORD="your_password"
+DB_NAME=attendance_db
+DB_USER=postgres
+DB_PASSWORD=your_password
 DB_HOST=localhost
 DB_PORT=5432
 ```
 
-Replace:
+---
 
-```env
-DB_PASSWORD="your_password"
-```
+## Automatic Database Initialization
 
-with your actual PostgreSQL password.
+When running locally, the server automatically:
+
+* Connects to PostgreSQL
+* Creates the database if it does not exist
+* Executes `app/schema.sql` if the required tables are missing
+
+No manual SQL execution is required.
 
 ---
 
-# Important: Configure `mapping.json`
+# Configure `mapping.json`
 
-Before running the server, update:
+The project uses a configurable schema mapping located at
 
 ```text
 app/config/mapping.json
 ```
 
-The values inside this file MUST match your actual database table names and column names.
-
-Default example:
+Default mapping:
 
 ```json
 {
@@ -117,65 +239,87 @@ Default example:
 }
 ```
 
-## Important
-
-The default mapping will NOT work automatically with your existing database unless your schema matches exactly.
-
-You must replace:
-
-* table names
-* column names
-
-with the actual names from your database.
+If your existing database uses different table or column names, update this file accordingly.
 
 Example:
 
-If your database uses:
+```text
+employees
+```
 
-* `employees` instead of `users`
-* `emp_id` instead of `id`
+instead of
 
-then update the mapping accordingly.
+```text
+users
+```
+
+or
+
+```text
+emp_id
+```
+
+instead of
+
+```text
+id
+```
 
 ---
 
-# Run the MCP Server
-
-From the project root:
+# Run the Server (Local)
 
 ```bash
 python -m app.main
 ```
 
-If everything is configured correctly, the MCP server should start successfully.
+During startup the server:
+
+* Initializes the database (if enabled)
+* Validates the configured schema
+* Starts the MCP server
 
 ---
 
-# Connecting with Claude Desktop
+# Claude Desktop Integration
 
+## Docker (Recommended)
 
+Start the Docker containers first.
 
-To connect this MCP server to your Claude Desktop App, you need to add it to your `claude_desktop_config.json` file. 
+```bash
+docker compose up
+```
 
-### Option 1: Using Claude Desktop (Recommended & Easiest)
-The simplest way to open the configuration file—regardless of how Claude was installed—is to let the app open it for you:
+Then configure Claude Desktop.
 
-1. Open the **Claude Desktop App**.
-2. Click on **Claude** in the file menu (or the **Developer** menu depending on your version).
-3. Select **Settings...** or **Edit Config**.
-4. This will instantly open your active `claude_desktop_config.json` file in your default text editor.
+Example:
+
+```json
+{
+  "mcpServers": {
+    "docker_attendance-server": {
+      "command": "docker",
+      "args": [
+        "exec",
+        "-i",
+        "attendance_mcp",
+        "python",
+        "-m",
+        "app.main"
+      ]
+    }
+  }
+}
+```
+
+The `attendance_mcp` container must already be running.
 
 ---
 
-### Option 2: Locating the File Manually (Windows)
-If you prefer to find the file manually or are using a script, its location depends on how you installed Claude:
+## Local Python Installation
 
-#### Case A: If installed via the Windows Store / App Installer (New Default)
-Copy and paste this universal variable path directly into your Windows File Explorer address bar or your code editor to jump straight to it:
-```powershell
-%LOCALAPPDATA%\Packages\Claude_pzs8sxrjxfjjc\LocalCache\Roaming\Claude\claude_desktop_config.json
-
-Add the following configuration:
+Example configuration:
 
 ```json
 {
@@ -187,113 +331,175 @@ Add the following configuration:
         "app.main"
       ],
       "env": {
-        "PYTHONPATH": "PATH_TO_YOUR_PROJECT_ROOT"
+        "PYTHONPATH": "PATH_TO_PROJECT_ROOT"
       }
     }
   }
 }
 ```
 
----
-
-# Replace the Following Paths
-
-## Python executable path
-
-Replace:
+Replace
 
 ```text
 PATH_TO_YOUR_VENV_PYTHON
 ```
 
-with your virtual environment Python executable.
-
-Example structure:
+with
 
 ```text
-YOUR_PROJECT_FOLDER/venv/Scripts/python.exe
+YOUR_PROJECT/venv/Scripts/python.exe
 ```
 
----
-
-## Project root path
-
-Replace:
+Replace
 
 ```text
-PATH_TO_YOUR_PROJECT_ROOT
+PATH_TO_PROJECT_ROOT
 ```
 
-with the root path of the cloned repository.
-
-Example structure:
-
-```text
-C:/Users/YourName/path/to/MCP-server-for-attendance-maintainance
-```
+with your cloned repository path.
 
 ---
 
 # Restart Claude Desktop
 
-After updating the config:
+After updating the configuration:
 
-1. Close Claude Desktop completely
-2. Reopen Claude Desktop
+1. Close Claude Desktop completely.
+2. Start Claude Desktop again.
 
-The MCP tools should now become available automatically.
+The attendance tools should now be available.
 
 ---
 
 # Available MCP Tools
 
-Current tools include:
-
 * create_user_tool
 * get_user_tool
 * mark_attendance_tool
 * get_attendance_tool
+* date_attendance_tool
 * check_out_tool
+* update_user_tool
 
 ---
 
-# Notes
+# Docker Commands
 
-* The server validates schema mappings during startup.
-* Extra database columns are ignored unless required by the schema.
-* Only PostgreSQL is currently supported.
-* Future updates may include:
+Build images
 
-  * MySQL support
-  * SQLite support
-  * Auto schema mapping
-  * Additional attendance analytics
+```bash
+docker compose build
+```
+
+Start containers
+
+```bash
+docker compose up
+```
+
+Rebuild and start
+
+```bash
+docker compose up --build
+```
+
+Stop containers
+
+```bash
+docker compose down
+```
+
+Stop and remove database volume
+
+```bash
+docker compose down -v
+```
+
+View running containers
+
+```bash
+docker ps
+```
+
+View all containers
+
+```bash
+docker ps -a
+```
+
+View logs
+
+```bash
+docker logs attendance_mcp
+```
+
+```bash
+docker logs attendance_postgres
+```
 
 ---
 
 # Troubleshooting
 
-## `ModuleNotFoundError: No module named 'app'`
+## PostgreSQL Connection Refused
 
-Make sure:
+The PostgreSQL container may still be starting.
 
-* you are running using:
+The MCP server automatically retries the connection until PostgreSQL is ready.
+
+---
+
+## Schema Validation Failed
+
+Verify that `mapping.json` matches your database schema.
+
+---
+
+## Database Authentication Failed
+
+Verify:
+
+* `DB_NAME`
+* `DB_USER`
+* `DB_PASSWORD`
+* `DB_HOST`
+* `DB_PORT`
+
+For Docker these values are supplied through `.env.docker`.
+
+For local installation they come from `.env`.
+
+---
+
+## ModuleNotFoundError: No module named 'app'
+
+Run the project using
 
 ```bash
 python -m app.main
 ```
 
-* `PYTHONPATH` is correctly configured in Claude Desktop config
+and verify that `PYTHONPATH` is configured correctly in the Claude Desktop configuration.
 
 ---
 
-## Database connection errors
+# Notes
 
-Verify:
-
-* PostgreSQL is running
-* `.env` credentials are correct
-* database exists
+* Docker is the recommended installation method.
+* Docker automatically creates the PostgreSQL database and applies `schema.sql` during the first startup.
+* Local installation automatically creates the database (if necessary) and initializes the schema.
+* The database schema is validated each time the server starts.
+* The PostgreSQL Docker volume preserves your data between restarts.
+* Running `docker compose down` does **not** delete your data.
+* Running `docker compose down -v` removes the PostgreSQL volume and permanently deletes all stored data.
 
 ---
 
+# Future Improvements
+
+* MySQL support
+* SQLite support
+* Automatic schema mapping
+* Attendance analytics
+* REST API alongside MCP
+* Multi-company support
